@@ -40,12 +40,15 @@ func (t *Task) processPoolNewEraUpdate(poolAddr string) error {
 	if poolInfo.Status != ActiveEnded {
 		return nil
 	}
+	if poolInfo.Active == "0" && poolInfo.Bond == "0" && poolInfo.Unbond == "0" {
+		return nil
+	}
 
 	_, timestamp, err := t.neutronClient.GetCurrentBLockAndTimestamp()
 	if err != nil {
 		return err
 	}
-	targetEra := uint64(timestamp)/poolInfo.EraSeconds + poolInfo.Offset
+	targetEra := uint64(timestamp)/poolInfo.EraSeconds - poolInfo.Offset
 
 	// check targetEra to skip
 	if targetEra <= poolInfo.Era {
