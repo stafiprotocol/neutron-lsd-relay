@@ -90,7 +90,7 @@ type ICAData struct {
 }
 
 type StackInfoRes struct {
-	Pools []string `json:"pools"`
+	Pools []string `json:"entrusted_pools"`
 }
 
 type eraSnapshot struct {
