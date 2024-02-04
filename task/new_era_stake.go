@@ -57,12 +57,12 @@ func (t *Task) processPoolNewEraStake(poolAddr string) error {
 		return errors.New("ica data query failed")
 	}
 
-	if !t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight) {
-		logger.Warnln("delegation interchain query not ready")
+	if submitHeight, ok := t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
+		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)
 		return nil
 	}
 
-	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraStakeMsg(poolAddr), nil)
+	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, GetEraStakeMsg(poolAddr), nil)
 	if err != nil {
 		logger.Warnf("failed, err: %s \n", err.Error())
 		return err

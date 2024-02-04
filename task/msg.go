@@ -90,7 +90,8 @@ type ICAData struct {
 }
 
 type StackInfoRes struct {
-	Pools []string `json:"entrusted_pools"`
+	// Pools []string `json:"entrusted_pools"`
+	Pools []string `json:"pools"`
 }
 
 type eraSnapshot struct {
@@ -137,7 +138,7 @@ func getEraUpdateMsg(poolAddr string) []byte {
 	return marshal
 }
 
-func getEraStakeMsg(poolAddr string) []byte {
+func GetEraStakeMsg(poolAddr string) []byte {
 	eraBondMsg := struct {
 		PoolAddr `json:"era_stake"`
 	}{

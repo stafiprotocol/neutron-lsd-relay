@@ -56,8 +56,8 @@ func (t *Task) processPoolNewEraActive(poolAddr string) error {
 		"action":  eraActiveFuncName,
 	})
 
-	if !t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight) {
-		logger.Warnln("delegation interchain query not ready")
+	if submitHeight, ok := t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
+		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)
 		return nil
 	}
 	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraActiveMsg(poolAddr), nil)

@@ -48,14 +48,14 @@ func (t *Task) processPoolIcqUpdate(poolAddr string) error {
 	return nil
 }
 
-func (t *Task) checkIcqSubmitHeight(icaAddr, queryKind string, lastStepHeight uint64) bool {
+func (t *Task) checkIcqSubmitHeight(icaAddr, queryKind string, lastStepHeight uint64) (uint64, bool) {
 	query, err := t.getRegisteredIcqQuery(icaAddr, queryKind)
 	if err != nil {
-		return false
+		return 0, false
 	}
 	if query.RegisteredQuery.LastSubmittedResultLocalHeight <= lastStepHeight {
-		return false
+		return query.RegisteredQuery.LastSubmittedResultLocalHeight, false
 	}
 
-	return true
+	return query.RegisteredQuery.LastSubmittedResultLocalHeight, true
 }

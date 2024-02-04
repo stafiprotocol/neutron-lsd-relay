@@ -57,8 +57,8 @@ func (t *Task) processPoolNewEraRestake(poolAddr string) error {
 		"action":        newEraRestakeFuncName,
 	})
 
-	if !t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight) {
-		logger.Warnln("delegation interchain query not ready")
+	if submitHeight, ok := t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
+		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)
 		return nil
 	}
 
