@@ -44,7 +44,7 @@ type QueryPoolInfoRes struct {
 	IcaId                     string      `json:"ica_id"`
 	Era                       uint64      `json:"era"`
 	EraSeconds                uint64      `json:"era_seconds"`
-	Offset                    uint64      `json:"offset"`
+	Offset                    int64       `json:"offset"`
 	Bond                      string      `json:"bond"`
 	Unbond                    string      `json:"unbond"`
 	Active                    string      `json:"active"`
