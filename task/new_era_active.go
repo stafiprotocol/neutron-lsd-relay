@@ -60,6 +60,10 @@ func (t *Task) processPoolNewEraActive(poolAddr string) error {
 		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)
 		return nil
 	}
+
+	t.txMutex.Lock()
+	defer t.txMutex.Unlock()
+
 	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraActiveMsg(poolAddr), nil)
 	if err != nil {
 		logger.Warnf("failed, err: %s \n", err.Error())

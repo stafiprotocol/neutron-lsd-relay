@@ -3,6 +3,7 @@ package task
 import (
 	"errors"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -23,6 +24,7 @@ type Task struct {
 	poolAddr            string
 	stakeManager        string
 	handlers            []Handler
+	txMutex             sync.Mutex
 }
 
 type Handler struct {
@@ -76,10 +78,10 @@ func NewTask(cfg *config.Config) (*Task, error) {
 		method: t.handleNewEraActive,
 		name:   eraActiveFuncName,
 	})
-	t.handlers = append(t.handlers, Handler{
-		method: t.handleIcqUpdate,
-		name:   icqUpdateFuncName,
-	})
+	// t.handlers = append(t.handlers, Handler{
+	// 	method: t.handleIcqUpdate,
+	// 	name:   icqUpdateFuncName,
+	// })
 	t.handlers = append(t.handlers, Handler{
 		method: t.handleRedeemShares,
 		name:   redeemSharesFuncName,

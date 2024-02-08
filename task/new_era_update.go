@@ -64,6 +64,9 @@ func (t *Task) processPoolNewEraUpdate(poolAddr string) error {
 		"action":    newEraUpdateFuncName,
 	})
 
+	t.txMutex.Lock()
+	defer t.txMutex.Unlock()
+
 	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraUpdateMsg(poolAddr), nil)
 	if err != nil {
 		logger.Warnf("failed, err: %s \n", err.Error())

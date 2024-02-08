@@ -47,11 +47,15 @@ func (t *Task) processPoolRedeemShares(poolAddr string) error {
 		})
 		msg := getRedeemTokenForShareMsg(t.poolAddr, coins)
 
+		t.txMutex.Lock()
 		txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, msg, nil)
 		if err != nil {
+			t.txMutex.Unlock()
+
 			logger.Warnf("failed, err: %s \n", err.Error())
 			return err
 		}
+		t.txMutex.Unlock()
 
 		logger.WithFields(logrus.Fields{
 			"txHash": txHash,
