@@ -78,10 +78,6 @@ func NewTask(cfg *config.Config) (*Task, error) {
 		method: t.handleNewEraActive,
 		name:   eraActiveFuncName,
 	})
-	// t.handlers = append(t.handlers, Handler{
-	// 	method: t.handleIcqUpdate,
-	// 	name:   icqUpdateFuncName,
-	// })
 	t.handlers = append(t.handlers, Handler{
 		method: t.handleRedeemShares,
 		name:   redeemSharesFuncName,

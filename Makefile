@@ -1,4 +1,4 @@
-VERSION := $(shell git describe --tags)
+VERSION := $(shell git describe --tags --always)
 COMMIT  := $(shell git log -1 --format='%H')
 
 all: build

@@ -177,16 +177,6 @@ func getEraActiveMsg(poolAddr string) []byte {
 	return marshal
 }
 
-func getPoolUpdateQueryExecuteMsg(poolAddr string) []byte {
-	msg := struct {
-		PoolAddr `json:"pool_update_validators_icq"`
-	}{
-		PoolAddr: PoolAddr{Addr: poolAddr},
-	}
-	marshal, _ := json.Marshal(msg)
-	return marshal
-}
-
 func getRedeemTokenForShareMsg(poolAddr string, tokens []Coin) []byte {
 	msg := struct {
 		RedeemTokenForShareMsg `json:"redeem_token_for_share"`
