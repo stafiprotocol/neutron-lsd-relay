@@ -6,6 +6,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 )
@@ -25,16 +26,24 @@ type Config struct {
 	KeystorePath string
 }
 
-func Load(configFilePath string) (*Config, error) {
+func Load(basePath string) (*Config, error) {
+	basePath = strings.TrimSuffix(basePath, "/")
+	configFilePath := basePath + "/config.toml"
+	fmt.Printf("config path: %s\n", configFilePath)
+
 	cfg := Config{}
 	if err := loadSysConfig(configFilePath, &cfg); err != nil {
 		return nil, err
 	}
-	if len(cfg.LogFilePath) == 0 {
-		cfg.LogFilePath = "./log_data"
-	}
+	cfg.LogFilePath = basePath + "/log_data"
+	cfg.KeystorePath = KeyStoreFilePath(basePath)
 
 	return &cfg, nil
+}
+
+func KeyStoreFilePath(basePath string) string {
+	basePath = strings.TrimSuffix(basePath, "/")
+	return basePath + "/keystore"
 }
 
 func loadSysConfig(path string, config *Config) error {

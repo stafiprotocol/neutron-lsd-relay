@@ -13,15 +13,11 @@ import (
 )
 
 var (
-	flagLogLevel   = "log_level"
-	flagConfigPath = "config"
+	flagLogLevel = "log-level"
+	flagBasePath = "base-path"
 
-	defaultKeystorePath          = "./keys"
-	defaultConfigPath            = "./config.toml"
-	defaultLogPath               = "./log_data"
-	defaultBackendOptions        = "test"
-	defaultTimeTicket     uint32 = 10
-	defaultLogLevel              = logrus.InfoLevel.String()
+	defaultBasePath = "~/cosmos-stack"
+	defaultLogLevel = logrus.InfoLevel.String()
 )
 
 func startCmd() *cobra.Command {
@@ -30,11 +26,15 @@ func startCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		Short: "Start lsd relay",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			configPath, err := cmd.Flags().GetString(flagConfigPath)
+			basePath, err := cmd.Flags().GetString(flagBasePath)
 			if err != nil {
 				return err
 			}
-			fmt.Printf("config path: %s\n", configPath)
+			cfg, err := config.Load(basePath)
+			if err != nil {
+				return err
+			}
+
 			// check log level
 			logLevelStr, err := cmd.Flags().GetString(flagLogLevel)
 			if err != nil {
@@ -47,23 +47,12 @@ func startCmd() *cobra.Command {
 			fmt.Printf("log level: %s\n", logLevelStr)
 			logrus.SetLevel(logLevel)
 
-			cfg, err := config.Load(configPath)
-			if err != nil {
-				return err
-			}
 			if cfg.BackendOptions == "" {
-				cfg.BackendOptions = defaultBackendOptions
+				return fmt.Errorf("backend_options must be set")
 			}
 			if cfg.TaskTicker == 0 {
-				cfg.TaskTicker = defaultTimeTicket
+				return fmt.Errorf("task_ticker must be set")
 			}
-			if cfg.KeystorePath == "" {
-				cfg.KeystorePath = defaultKeystorePath
-			}
-			if cfg.LogFilePath == "" {
-				cfg.LogFilePath = defaultLogPath
-			}
-
 			err = log.InitLogFile(cfg.LogFilePath)
 			if err != nil {
 				return err
@@ -92,8 +81,8 @@ func startCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagConfigPath, defaultConfigPath, "Config file path")
 	cmd.Flags().String(flagLogLevel, defaultLogLevel, "The logging level (trace|debug|info|warn|error|fatal|panic)")
+	cmd.Flags().String(flagBasePath, defaultBasePath, "base path a directory where your config.toml resids")
 
 	return cmd
 }
