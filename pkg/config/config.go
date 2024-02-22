@@ -12,18 +12,18 @@ import (
 )
 
 type Config struct {
-	TaskTicker          uint32
-	PoolAddr            string
-	StakeManager        string
-	GasPrice            string
-	KeyName             string
-	BackendOptions      string
-	RunForEntrustedPool bool
-
 	EndpointList []string
+	TaskTicker   uint32
+	PoolAddr     string
+	StakeManager string
+	GasPrice     string
 
-	LogFilePath  string
-	KeystorePath string
+	LogFilePath    string
+	KeyringDir     string
+	KeyringBackend string
+	KeyName        string
+
+	RunForEntrustedPool bool
 }
 
 func Load(basePath string) (*Config, error) {
@@ -36,10 +36,6 @@ func Load(basePath string) (*Config, error) {
 		return nil, err
 	}
 	cfg.LogFilePath = basePath + "/log_data"
-
-	cfg.KeyName = "stafi-neutron-lsd-rly"
-	cfg.KeystorePath = basePath + "/keystore"
-	cfg.BackendOptions = "file"
 
 	return &cfg, nil
 }

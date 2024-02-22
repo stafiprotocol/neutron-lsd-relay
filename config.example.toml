@@ -1,7 +1,9 @@
 endpointList = ["http://127.0.0.1:26657"]
-logFilePath = ""
-gasPrice="0.005untrn"
+gasPrice = "0.005untrn"
 taskTicker = 60  # seconds
-poolAddr=""
-stakeManager=""
-runForEntrustedPool=false
+poolAddr = ""
+stakeManagerAddr = ""
+keyringDir = ""
+keyringBackend = "file"
+keyName = ""
+runForEntrustedPool = false

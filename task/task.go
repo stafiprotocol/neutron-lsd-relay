@@ -47,7 +47,7 @@ func NewTask(cfg *config.Config) (*Task, error) {
 		runForEntrustedPool: cfg.RunForEntrustedPool,
 	}
 
-	kr, err := keyring.New("neutron", cfg.BackendOptions, cfg.KeystorePath, os.Stdin, client.MakeEncodingConfig().Marshaler)
+	kr, err := keyring.New("neutron", cfg.KeyringBackend, cfg.KeyringDir, os.Stdin, client.MakeEncodingConfig().Marshaler)
 	if err != nil {
 		return nil, err
 	}

@@ -35,7 +35,7 @@ func startCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if _, err := os.Stat(cfg.KeystorePath + "/keyring-file/" + cfg.KeyName + ".info"); err != nil {
+			if _, err := os.Stat(cfg.KeyringDir + "/keyring-file/" + cfg.KeyName + ".info"); err != nil {
 				return fmt.Errorf("please import your account first")
 			}
 
@@ -51,7 +51,7 @@ func startCmd() *cobra.Command {
 			fmt.Printf("log level: %s\n", logLevelStr)
 			logrus.SetLevel(logLevel)
 
-			if cfg.BackendOptions == "" {
+			if cfg.KeyringBackend == "" {
 				return fmt.Errorf("backend_options must be set")
 			}
 			if cfg.TaskTicker == 0 {
