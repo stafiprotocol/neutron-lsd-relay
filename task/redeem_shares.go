@@ -44,8 +44,12 @@ func (t *Task) processPoolRedeemShares(poolAddr string) error {
 		logger := logrus.WithFields(logrus.Fields{
 			"pool":   poolAddr,
 			"action": redeemSharesFuncName,
+			"coins":  coins,
 		})
-		msg := getRedeemTokenForShareMsg(t.poolAddr, coins)
+		msg := getRedeemTokenForShareMsg(poolAddr, coins)
+		logrus.WithFields(logrus.Fields{
+			"coins": coins, "msg": string(msg),
+		}).Debug("getRedeemTokenForShareMsg")
 
 		t.txMutex.Lock()
 		txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, msg, nil)

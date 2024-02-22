@@ -103,8 +103,8 @@ type eraSnapshot struct {
 }
 
 type Coin struct {
-	Denom  string `json:"denom"`
 	Amount string `json:"amount"`
+	Denom  string `json:"denom"`
 }
 
 type RedeemTokenForShareMsg struct {
@@ -174,16 +174,6 @@ func getEraActiveMsg(poolAddr string) []byte {
 		PoolAddr: PoolAddr{Addr: poolAddr},
 	}
 	marshal, _ := json.Marshal(eraActiveMsg)
-	return marshal
-}
-
-func getPoolUpdateQueryExecuteMsg(poolAddr string) []byte {
-	msg := struct {
-		PoolAddr `json:"pool_update_validators_icq"`
-	}{
-		PoolAddr: PoolAddr{Addr: poolAddr},
-	}
-	marshal, _ := json.Marshal(msg)
 	return marshal
 }
 
