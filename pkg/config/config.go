@@ -36,14 +36,12 @@ func Load(basePath string) (*Config, error) {
 		return nil, err
 	}
 	cfg.LogFilePath = basePath + "/log_data"
-	cfg.KeystorePath = KeyStoreFilePath(basePath)
+
+	cfg.KeyName = "stafi-neutron-lsd-rly"
+	cfg.KeystorePath = basePath + "/keystore"
+	cfg.BackendOptions = "file"
 
 	return &cfg, nil
-}
-
-func KeyStoreFilePath(basePath string) string {
-	basePath = strings.TrimSuffix(basePath, "/")
-	return basePath + "/keystore"
 }
 
 func loadSysConfig(path string, config *Config) error {

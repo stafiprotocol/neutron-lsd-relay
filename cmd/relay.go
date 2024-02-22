@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/stafiprotocol/neutron-lsd-relay/pkg/config"
 	"github.com/stafiprotocol/neutron-lsd-relay/pkg/log"
@@ -33,6 +34,9 @@ func startCmd() *cobra.Command {
 			cfg, err := config.Load(basePath)
 			if err != nil {
 				return err
+			}
+			if _, err := os.Stat(cfg.KeystorePath + "/keyring-file/" + cfg.KeyName + ".info"); err != nil {
+				return fmt.Errorf("please import your account first")
 			}
 
 			// check log level

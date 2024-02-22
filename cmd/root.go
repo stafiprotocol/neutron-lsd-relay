@@ -31,6 +31,8 @@ func NewRootCmd() *cobra.Command {
 
 	rootCmd.AddCommand(
 		startCmd(),
+		importArmoredAccountCmd(),
+		importUnarmoredAccountCmd(),
 		versionCmd(),
 	)
 	return rootCmd
