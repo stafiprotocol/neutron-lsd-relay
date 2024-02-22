@@ -103,8 +103,8 @@ type eraSnapshot struct {
 }
 
 type Coin struct {
-	Denom  string `json:"denom"`
 	Amount string `json:"amount"`
+	Denom  string `json:"denom"`
 }
 
 type RedeemTokenForShareMsg struct {
