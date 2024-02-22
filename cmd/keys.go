@@ -6,7 +6,6 @@ import (
 
 	"github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/config"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -62,10 +61,6 @@ The pass backend requires GnuPG: https://gnupg.org/
 				return err
 			}
 
-			initClientCtx, err = config.ReadFromClientConfig(initClientCtx)
-			if err != nil {
-				return err
-			}
 			cmd.SetContext(context.WithValue(cmd.Context(), client.ClientContextKey, &initClientCtx))
 			return nil
 		},
