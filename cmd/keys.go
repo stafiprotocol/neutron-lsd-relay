@@ -11,6 +11,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/neutron-org/neutron/v2/app"
 	"github.com/spf13/cobra"
+	"github.com/stafiprotocol/neutron-lsd-relay/pkg/utils"
 )
 
 func keysCommands() *cobra.Command {
@@ -55,6 +56,16 @@ The pass backend requires GnuPG: https://gnupg.org/
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			cmd.SetOut(cmd.OutOrStdout())
 			cmd.SetErr(cmd.ErrOrStderr())
+
+			keyringDirFlag := cmd.Flag(flags.FlagKeyringDir)
+			keyringDir := keyringDirFlag.Value.String()
+			keyringDir, err := utils.ReplaceUserHomeDir("--keyring-dir", keyringDir)
+			if err != nil {
+				return err
+			}
+			if err := keyringDirFlag.Value.Set(keyringDir); err != nil {
+				return err
+			}
 
 			initClientCtx, err := client.ReadPersistentCommandFlags(initClientCtx, cmd.Flags())
 			if err != nil {

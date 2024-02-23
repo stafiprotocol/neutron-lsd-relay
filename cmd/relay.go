@@ -31,10 +31,20 @@ func startCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			basePath, err = utils.ReplaceUserHomeDir("--base-path", basePath)
+			if err != nil {
+				return err
+			}
 			cfg, err := config.Load(basePath)
 			if err != nil {
 				return err
 			}
+
+			cfg.KeyringDir, err = utils.ReplaceUserHomeDir("keyringDir", cfg.KeyringDir)
+			if err != nil {
+				return err
+			}
+
 			if _, err := os.Stat(cfg.KeyringDir + "/keyring-file/" + cfg.KeyName + ".info"); err != nil {
 				return fmt.Errorf("please import your account first")
 			}
