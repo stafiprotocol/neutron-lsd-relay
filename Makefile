@@ -13,8 +13,11 @@ get:
 	go mod tidy && go mod download
 
 build:
-	@echo " > \033[32mBuilding lsd-relay...\033[0m "
+	@echo " > \033[32mBuilding neutron-lsd-relay...\033[0m "
 	go build -mod readonly $(BUILD_FLAGS) -o build/lsd-relay main.go
+
+install: build
+	sudo mv build/lsd-relay /usr/local/bin/neutron-lsd-relay
 
 build-linux:
 	@GOOS=linux GOARCH=amd64 go build --mod readonly $(BUILD_FLAGS) -o ./build/lsd-relay main.go
