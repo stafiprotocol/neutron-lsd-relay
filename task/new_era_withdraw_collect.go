@@ -1,7 +1,6 @@
 package task
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/sirupsen/logrus"
@@ -21,7 +20,10 @@ func (t *Task) handleNewEraWithdrawCollect() error {
 			poolAddr := poolAddr
 			go func(addr string) {
 				defer wg.Done()
-				_ = t.processPoolNewEraWithdrawCollect(addr)
+				err = t.processPoolNewEraWithdrawCollect(addr)
+				if err != nil {
+					logrus.Error(err)
+				}
 			}(poolAddr)
 		}
 		wg.Wait()
@@ -47,16 +49,13 @@ func (t *Task) processPoolNewEraWithdrawCollect(poolAddr string) error {
 	if err != nil {
 		return err
 	}
-	if len(poolIca) < 2 {
-		return errors.New("ica data query failed")
-	}
 
 	logger := logrus.WithFields(logrus.Fields{
 		"pool":   poolAddr,
 		"action": newEraWithdrawCollectFuncName,
 	})
 
-	if subHeight, ok := t.checkIcqSubmitHeight(poolIca[1].IcaAddr, BalancesQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
+	if subHeight, ok := t.checkIcqSubmitHeight(poolIca.WithdrawAddressIcaInfo.IcaAddr, BalancesQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
 		logger.Warnln("withdraw address balance interchain query not ready", "submitHeight", subHeight)
 		return nil
 	}

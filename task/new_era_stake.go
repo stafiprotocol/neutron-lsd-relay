@@ -1,7 +1,6 @@
 package task
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/sirupsen/logrus"
@@ -21,7 +20,10 @@ func (t *Task) handleNewEraStake() error {
 			poolAddr := poolAddr
 			go func(addr string) {
 				defer wg.Done()
-				_ = t.processPoolNewEraStake(addr)
+				err = t.processPoolNewEraStake(addr)
+				if err != nil {
+					logrus.Error(err)
+				}
 			}(poolAddr)
 		}
 		wg.Wait()
@@ -48,14 +50,6 @@ func (t *Task) processPoolNewEraStake(poolAddr string) error {
 		"snapshotActive": poolInfo.EraSnapshot.Active,
 		"action":         newEraStakeFuncName,
 	})
-
-	poolIca, err := t.getPoolIcaInfo(poolInfo.IcaId)
-	if err != nil {
-		return err
-	}
-	if len(poolIca) < 2 {
-		return errors.New("ica data query failed")
-	}
 
 	if submitHeight, ok := t.checkIcqSubmitHeight(poolAddr, DelegationsQueryKind, poolInfo.EraSnapshot.LastStepHeight); !ok {
 		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)

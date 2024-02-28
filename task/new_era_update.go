@@ -20,7 +20,10 @@ func (t *Task) handleNewEraUpdate() error {
 			poolAddr := poolAddr
 			go func(addr string) {
 				defer wg.Done()
-				_ = t.processPoolNewEraUpdate(addr)
+				err = t.processPoolNewEraUpdate(addr)
+				if err != nil {
+					logrus.Error(err)
+				}
 			}(poolAddr)
 		}
 		wg.Wait()

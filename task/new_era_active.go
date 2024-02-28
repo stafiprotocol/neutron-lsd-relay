@@ -1,7 +1,6 @@
 package task
 
 import (
-	"errors"
 	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
@@ -21,7 +20,10 @@ func (t *Task) handleNewEraActive() error {
 			poolAddr := poolAddr
 			go func(addr string) {
 				defer wg.Done()
-				_ = t.processPoolNewEraActive(addr)
+				err = t.processPoolNewEraActive(addr)
+				if err != nil {
+					logrus.Error(err)
+				}
 			}(poolAddr)
 		}
 		wg.Wait()
@@ -43,13 +45,6 @@ func (t *Task) processPoolNewEraActive(poolAddr string) error {
 		return nil
 	}
 
-	poolIca, err := t.getPoolIcaInfo(poolInfo.IcaId)
-	if err != nil {
-		return err
-	}
-	if len(poolIca) < 2 {
-		return errors.New("ica data query failed")
-	}
 	logger := logrus.WithFields(logrus.Fields{
 		"pool":    poolAddr,
 		"oldRate": poolInfo.Rate,

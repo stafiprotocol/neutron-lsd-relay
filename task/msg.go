@@ -86,7 +86,23 @@ type RegisterQueryInfoRes struct {
 }
 
 type ICAData struct {
-	IcaAddr string `json:"ica_addr"`
+	Admin              string `json:"admin"`
+	PoolAddressIcaInfo struct {
+		CtrlChannelID    string `json:"ctrl_channel_id"`
+		CtrlConnectionID string `json:"ctrl_connection_id"`
+		CtrlPortID       string `json:"ctrl_port_id"`
+		HostChannelID    string `json:"host_channel_id"`
+		HostConnectionID string `json:"host_connection_id"`
+		IcaAddr          string `json:"ica_addr"`
+	} `json:"pool_address_ica_info"`
+	WithdrawAddressIcaInfo struct {
+		CtrlChannelID    string `json:"ctrl_channel_id"`
+		CtrlConnectionID string `json:"ctrl_connection_id"`
+		CtrlPortID       string `json:"ctrl_port_id"`
+		HostChannelID    string `json:"host_channel_id"`
+		HostConnectionID string `json:"host_connection_id"`
+		IcaAddr          string `json:"ica_addr"`
+	} `json:"withdraw_address_ica_info"`
 }
 
 type StackInfoRes struct {
@@ -217,15 +233,15 @@ func (t *Task) getRegisteredIcqQuery(icaAddr, queryKind string) (*RegisterQueryI
 	return &res, nil
 }
 
-func (t *Task) getPoolIcaInfo(icaId string) ([]ICAData, error) {
+func (t *Task) getPoolIcaInfo(icaId string) (*ICAData, error) {
 	msg := fmt.Sprintf("{\"interchain_account_address_from_contract\":{\"interchain_account_id\":\"%s\"}}", icaId)
 	rawRes, err := t.neutronClient.QuerySmartContractState(t.stakeManager, []byte(msg))
 	if err != nil {
 		return nil, err
 	}
-	var res []ICAData
+	var res ICAData
 	_ = json.Unmarshal(rawRes.Data.Bytes(), &res)
-	return res, nil
+	return &res, nil
 }
 
 func (t *Task) getStackInfoRes() (*StackInfoRes, error) {
