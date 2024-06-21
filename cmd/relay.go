@@ -45,8 +45,9 @@ func startCmd() *cobra.Command {
 				return err
 			}
 
-			if _, err := os.Stat(cfg.KeyringDir + "/keyring-file/" + cfg.KeyName + ".info"); err != nil {
-				return fmt.Errorf("please import your account first")
+			keyPath := cfg.KeyringDir + "/keyring-file/" + cfg.KeyName + ".info"
+			if _, err := os.Stat(keyPath); err != nil {
+				return fmt.Errorf("please import your account first, key path: %s", keyPath)
 			}
 
 			// check log level
