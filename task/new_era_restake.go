@@ -3,6 +3,7 @@ package task
 import (
 	"sync"
 
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/sirupsen/logrus"
 )
 
@@ -55,11 +56,16 @@ func (t *Task) processPoolNewEraRestake(poolAddr string) error {
 		logger.Warnln("delegation interchain query not ready", "submitHeight", submitHeight)
 		return nil
 	}
+	ibcFee, err := t.neutronClient.GetTotalIbcFee()
+	if err != nil {
+		return err
+	}
+	ibcFeeCoins := types.NewCoins(types.NewCoin(t.neutronClient.GetDenom(), ibcFee))
 
 	t.txMutex.Lock()
 	defer t.txMutex.Unlock()
 
-	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraRestakeMsg(poolAddr), nil)
+	txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, getEraRestakeMsg(poolAddr), ibcFeeCoins)
 	if err != nil {
 		logger.Warnf("failed, err: %s \n", err.Error())
 		return err

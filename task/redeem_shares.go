@@ -1,6 +1,7 @@
 package task
 
 import (
+	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/sirupsen/logrus"
 	"github.com/stafiprotocol/neutron-lsd-relay/pkg/utils"
 )
@@ -51,8 +52,14 @@ func (t *Task) processPoolRedeemShares(poolAddr string) error {
 			"coins": coins, "msg": string(msg),
 		}).Debug("getRedeemTokenForShareMsg")
 
+		ibcFee, err := t.neutronClient.GetTotalIbcFee()
+		if err != nil {
+			return err
+		}
+		ibcFeeCoins := types.NewCoins(types.NewCoin(t.neutronClient.GetDenom(), ibcFee))
+
 		t.txMutex.Lock()
-		txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, msg, nil)
+		txHash, err := t.neutronClient.SendContractExecuteMsg(t.stakeManager, msg, ibcFeeCoins)
 		if err != nil {
 			t.txMutex.Unlock()
 
