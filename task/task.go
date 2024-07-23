@@ -33,7 +33,7 @@ type Handler struct {
 }
 
 func NewTask(cfg *config.Config) (*Task, error) {
-	if cfg.StakeManager == "" {
+	if cfg.StakeManagerAddr == "" {
 		return nil, errors.New("stake manager is empty")
 	}
 	if cfg.PoolAddr == "" && !cfg.RunForEntrustedPool {
@@ -43,7 +43,7 @@ func NewTask(cfg *config.Config) (*Task, error) {
 		taskTicker:          cfg.TaskTicker,
 		stop:                make(chan struct{}),
 		poolAddr:            cfg.PoolAddr,
-		stakeManager:        cfg.StakeManager,
+		stakeManager:        cfg.StakeManagerAddr,
 		runForEntrustedPool: cfg.RunForEntrustedPool,
 	}
 

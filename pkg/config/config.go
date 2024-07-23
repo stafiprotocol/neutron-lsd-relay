@@ -12,11 +12,11 @@ import (
 )
 
 type Config struct {
-	EndpointList []string
-	TaskTicker   uint32
-	PoolAddr     string
-	StakeManager string
-	GasPrice     string
+	EndpointList     []string
+	TaskTicker       uint32
+	PoolAddr         string
+	StakeManagerAddr string
+	GasPrice         string
 
 	LogFilePath    string
 	KeyringDir     string
